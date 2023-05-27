@@ -51,7 +51,11 @@ export default function Cart(){
         if(!user){
             alert("not logged in")
         }else{
-            alert('bought drafter')
+
+            const cart = JSON.parse(window.localStorage.getItem("cart_items"));
+            const sellers = [...new Set(cart.map(item => item.seller))];
+            alert(sellers);
+           
         }
     }
 

@@ -6,7 +6,7 @@ import SingleProductDesktop from "./SingleProductDesktop";
 import AppPagination from "../pagination";
 import { useState } from "react";
 
-export default function Products() {
+const Products = (props) => {
   const theme = useTheme();
   const matches = useMediaQuery(theme.breakpoints.down("md"));
 
@@ -32,7 +32,9 @@ export default function Products() {
       >
         {renderProducts}
       </Grid>
-      <AppPagination setProducts= {(p) => setProducts(p)} />
+      <AppPagination setProducts= {(p) => setProducts(p)} products={props.db_products} />
     </Container>
   );
 }
+
+export default Products;

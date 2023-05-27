@@ -4,6 +4,8 @@ import { Colors } from "../../styles/theme";
 import SearchIcon from "@mui/icons-material/Search";
 import CloseIcon from "@mui/icons-material/Close";
 import { useUIContext } from "../../context/ui";
+import  useDialogModal  from "../../hooks/useDialogModal";
+import {useState} from 'react';
 
 const SearchBoxContainer = styled(Box)(({ theme }) => ({
   position: "absolute",
@@ -36,7 +38,22 @@ const SearchField = styled(TextField)(({ theme }) => ({
   padding: "0 0 0 40px",
 }));
 
-export default function SearchBox() {
+export default function SearchBox(ProductDetail) {
+  const [query,setQuery] = useState('');
+  const [foundProduct,setFoundProduct] = useState({});
+
+  const [ProductDetailDialog, showProductDetailDialog, closeProductDialog] = useDialogModal(ProductDetail);
+  const handleSearch = (e) => {
+    const search_product = ProductDetail.ProductDetail;
+    search_product.filter((product) => {
+      if (product.name.trim() === query.trim()) {
+        console.log(product.name);
+        setFoundProduct(product);
+        showProductDetailDialog();
+      }
+    });
+    
+    }
     const { showSearchBox, setShowSearchBox } = useUIContext();
 
   return (
@@ -47,9 +64,10 @@ export default function SearchBox() {
           variant="standard"
           fullWidth
           placeholder="search..."
+          onChange={(e) => setQuery(e.target.value)}
         />
-        <IconButton>
-                  <SearchIcon sx={{ fontSize: { xs: '2rem', md: "3rem" } }} color="secondary" />
+        <IconButton onClick={handleSearch}>
+                  <SearchIcon  sx={{ fontSize: { xs: '2rem', md: "3rem" } }} color="secondary" />
         </IconButton>
               <IconButton
                   onClick={() => setShowSearchBox(false) }
@@ -60,8 +78,11 @@ export default function SearchBox() {
           }}
         >
           <CloseIcon sx={{ fontSize: "4rem" }} color="secondary" />
+          {/* <ProductMeta product={foundProduct} />
+        <ProductDetailDialog product={foundProduct} /> */}
         </IconButton>
       </SearchBoxContainer>
+
     </Slide>
   );
 }

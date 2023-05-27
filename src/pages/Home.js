@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { Container, Typography, Box, Stack, Grid, Button } from "@mui/material";
 import Appbar from "../components/appbar";
 import { ThemeProvider } from "@mui/system";
@@ -15,8 +15,11 @@ import Cart from "../components/cart";
 import UserProvider from "../context/ui/User";
 import {db} from '../components/search/firebase/db'
 import { getDocs,collection, doc } from 'firebase/firestore';
+import {AddProdcut} from './addProduct'
+import { Link } from 'react-router-dom';
 
 export const Home = () => {
+    const [products, setProducts] = useState([]);
 
     useEffect(() => {
         const getProductsFromDB = async () => {
@@ -28,13 +31,14 @@ export const Home = () => {
                     id:doc.id
                 }));
                 console.log(filteredData)
+                setProducts(filteredData)
             }catch(e){
                 console.log(e)
             }
         }
-
-        document.title = "K-Used Store - Home";
         getProductsFromDB()
+        document.title = "K-Used Store - Home";
+        
       }, []);
 
   return (
@@ -53,11 +57,17 @@ export const Home = () => {
             <Appbar />
             <Banner />
             <Promotions />
-            <SearchBox />
+            <SearchBox  ProductDetail={products}/>
             <Box display="flex" justifyContent="center" sx={{ p: 4 }}>
               <Typography variant="h4">Our Products</Typography>
             </Box>
             <Products />
+            <Link to="/add" style={{display:'flex',justifyContent:'center',textDecoration:'none'}}>
+            <Button variant="contained" color="secondary" sx={{ m: 2 }}>
+              Add Product
+            </Button>
+            </Link>
+
             <Footer />
             <AppDrawer />
             <Cart />
